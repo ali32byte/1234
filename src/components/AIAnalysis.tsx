@@ -23,7 +23,7 @@ export function AIAnalysis({ isOpen, onClose }: AIAnalysisProps) {
     setAnalysis('');
 
     try {
-      const apiKey = 'AIzaSyBE-lJCcVBl2T1gBXJZL-pGvSbv9_eC98s';
+      const apiKey = 'AIzaSyAJoSSq5zGb-e1HQx65Ov_lNbHGfIeOBSs';
 
       if (!apiKey) {
         throw new Error('API key is not configured');

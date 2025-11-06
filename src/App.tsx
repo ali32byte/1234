@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Share2 } from 'lucide-react';
+import { Share2, Sparkles } from 'lucide-react';
 import { ThemeProvider, useTheme, themes } from './contexts/ThemeContext';
 import { DataProvider } from './contexts/DataContext';
 import { Header } from './components/Header';
@@ -14,6 +14,7 @@ import { AnalyticsCharts } from './components/AnalyticsCharts';
 import { LeagueBoard } from './components/LeagueBoard';
 import { Achievements } from './components/Achievements';
 import { ExportMenu } from './components/ExportMenu';
+import { AIAnalysis } from './components/AIAnalysis';
 import { motion } from 'framer-motion';
 
 function AppContent() {
@@ -21,6 +22,7 @@ function AppContent() {
   const currentTheme = themes[theme];
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showExportMenu, setShowExportMenu] = useState(false);
+  const [showAIAnalysis, setShowAIAnalysis] = useState(false);
 
   return (
     <div className={`min-h-screen ${currentTheme.bg} transition-colors duration-300`}>
@@ -36,20 +38,40 @@ function AppContent() {
         onClose={() => setShowExportMenu(false)}
       />
 
-      <motion.button
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        onClick={() => setShowExportMenu(true)}
-        className="fixed bottom-8 left-8 bg-blue-500 text-white p-4 rounded-full shadow-2xl hover:bg-blue-600 transition-colors z-40"
-        title="دانلود تصویر"
-      >
-        <Share2 size={24} />
-      </motion.button>
+      <AIAnalysis
+        isOpen={showAIAnalysis}
+        onClose={() => setShowAIAnalysis(false)}
+      />
+
+      <div className="fixed bottom-8 left-8 flex flex-col gap-3 z-40">
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={() => setShowExportMenu(true)}
+          className="bg-blue-500 text-white p-4 rounded-full shadow-2xl hover:bg-blue-600 transition-colors"
+          title="دانلود تصویر"
+        >
+          <Share2 size={24} />
+        </motion.button>
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={() => setShowAIAnalysis(true)}
+          className="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-4 rounded-full shadow-2xl hover:from-purple-600 hover:to-pink-600 transition-colors"
+          title="تحلیل هوشمند AI"
+        >
+          <Sparkles size={24} />
+        </motion.button>
+      </div>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         <div id="profile-section">
           <h2 className={`text-2xl font-bold ${currentTheme.text} mb-4`}>وضعیت کلی شما</h2>
           <ProfileCard />
+        </div>
+
+        <div id="league-section">
+          <LeagueBoard />
         </div>
 
         <div id="progress-section">
@@ -72,14 +94,8 @@ function AppContent() {
           <SubjectComparisonChart />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div id="league-section">
-            <LeagueBoard />
-          </div>
-
-          <div id="achievements-section">
-            <Achievements />
-          </div>
+        <div id="achievements-section">
+          <Achievements />
         </div>
 
         <div id="skill-tree-section">

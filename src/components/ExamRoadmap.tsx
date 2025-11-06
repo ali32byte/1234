@@ -1,12 +1,37 @@
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme, themes } from '../contexts/ThemeContext';
 import { useData } from '../contexts/DataContext';
-import { Calendar } from 'lucide-react';
+import { Calendar, ChevronDown, ChevronUp } from 'lucide-react';
+import { useState, useMemo } from 'react';
 
 export function ExamRoadmap() {
   const { theme } = useTheme();
   const { studentData } = useData();
   const currentTheme = themes[theme];
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const currentExamIndex = useMemo(() => {
+    const completedIndex = studentData.exams.findIndex(e => e.taz > 0);
+    if (completedIndex === -1) return 0;
+
+    let lastCompletedIndex = completedIndex;
+    for (let i = completedIndex + 1; i < studentData.exams.length; i++) {
+      if (studentData.exams[i].taz > 0) {
+        lastCompletedIndex = i;
+      } else {
+        break;
+      }
+    }
+    return lastCompletedIndex;
+  }, [studentData.exams]);
+
+  const previewExams = useMemo(() => {
+    const start = Math.max(0, currentExamIndex - 2);
+    const end = Math.min(studentData.exams.length, start + 5);
+    return studentData.exams.slice(start, end);
+  }, [studentData.exams, currentExamIndex]);
+
+  const displayExams = isExpanded ? studentData.exams : previewExams;
 
   const getNodeColor = (taz: number) => {
     if (taz === 0) return 'bg-gray-300';
@@ -29,71 +54,94 @@ export function ExamRoadmap() {
       transition={{ delay: 0.2 }}
       className={`${currentTheme.card} rounded-2xl shadow-xl p-6 ${currentTheme.border} border`}
     >
-      <div className="flex items-center gap-2 mb-6">
-        <Calendar className="text-blue-500" size={24} />
-        <h2 className={`text-2xl font-bold ${currentTheme.text}`}>
-          مسیر آزمون‌ها
-        </h2>
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-2">
+          <Calendar className="text-blue-500" size={24} />
+          <h2 className={`text-2xl font-bold ${currentTheme.text}`}>
+            مسیر آزمون‌ها
+          </h2>
+        </div>
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setIsExpanded(!isExpanded)}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg ${theme === 'dark' || theme === 'neon' ? 'bg-gray-700' : 'bg-gray-100'} ${currentTheme.text} hover:shadow-lg transition-all`}
+        >
+          <span className="text-sm font-medium">
+            {isExpanded ? 'نمایش خلاصه' : 'نمایش کامل'}
+          </span>
+          {isExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+        </motion.button>
       </div>
 
-      <div className="relative">
-        <div className={`absolute top-1/2 left-0 right-0 h-1 ${theme === 'dark' || theme === 'neon' ? 'bg-gray-700' : 'bg-gray-300'} transform -translate-y-1/2`} />
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={isExpanded ? 'expanded' : 'collapsed'}
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          exit={{ opacity: 0, height: 0 }}
+          transition={{ duration: 0.3 }}
+          className="relative overflow-hidden"
+        >
+          <div className={`absolute top-1/2 left-0 right-0 h-1 ${theme === 'dark' || theme === 'neon' ? 'bg-gray-700' : 'bg-gray-300'} transform -translate-y-1/2`} />
 
-        <div className="flex justify-between items-center relative">
-          {studentData.exams.map((exam, index) => {
-            const isCompleted = exam.taz > 0;
-            const nodeColor = getNodeColor(exam.taz);
-            const nodeEmoji = getNodeEmoji(exam.taz);
+          <div className="flex justify-between items-center relative">
+            {displayExams.map((exam, index) => {
+              const isCompleted = exam.taz > 0;
+              const nodeColor = getNodeColor(exam.taz);
+              const nodeEmoji = getNodeEmoji(exam.taz);
+              const originalIndex = studentData.exams.findIndex(e => e.name === exam.name);
 
-            return (
-              <motion.div
-                key={exam.name}
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ scale: 1.1 }}
-                className="flex flex-col items-center group cursor-pointer"
-              >
+              return (
                 <motion.div
-                  whileHover={{ y: -10 }}
-                  className={`${nodeColor} w-16 h-16 rounded-full flex items-center justify-center text-2xl shadow-lg ${
-                    isCompleted ? 'ring-4 ring-white' : ''
-                  } transition-all`}
+                  key={exam.name}
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ delay: index * 0.1 }}
+                  whileHover={{ scale: 1.1 }}
+                  className="flex flex-col items-center group cursor-pointer"
                 >
-                  {nodeEmoji}
-                </motion.div>
-
-                <div className={`mt-3 text-center ${currentTheme.text}`}>
-                  <p className="font-bold text-sm">{exam.name}</p>
-                  <p className={`text-xs ${currentTheme.textSecondary}`}>{exam.date}</p>
-                  {isCompleted && (
-                    <p className="text-xs font-semibold mt-1">
-                      {exam.taz.toLocaleString('fa-IR')}
-                    </p>
-                  )}
-                </div>
-
-                {isCompleted && (
                   <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    whileHover={{ opacity: 1, y: 0 }}
-                    className={`absolute top-20 mt-16 ${currentTheme.card} ${currentTheme.border} border rounded-lg shadow-xl p-4 z-10 opacity-0 group-hover:opacity-100 transition-all pointer-events-none`}
+                    whileHover={{ y: -10 }}
+                    className={`${nodeColor} w-16 h-16 rounded-full flex items-center justify-center text-2xl shadow-lg ${
+                      isCompleted ? 'ring-4 ring-white' : ''
+                    } transition-all`}
                   >
-                    <p className={`text-sm ${currentTheme.text} font-semibold`}>
-                      تراز: {exam.taz.toLocaleString('fa-IR')}
-                    </p>
-                    {index > 0 && studentData.exams[index - 1].taz > 0 && (
-                      <p className={`text-xs ${currentTheme.textSecondary} mt-1`}>
-                        تغییر: {((exam.taz - studentData.exams[index - 1].taz) / studentData.exams[index - 1].taz * 100).toFixed(1)}%
+                    {nodeEmoji}
+                  </motion.div>
+
+                  <div className={`mt-3 text-center ${currentTheme.text}`}>
+                    <p className="font-bold text-sm">{exam.name}</p>
+                    <p className={`text-xs ${currentTheme.textSecondary}`}>{exam.date}</p>
+                    {isCompleted && (
+                      <p className="text-xs font-semibold mt-1">
+                        {exam.taz.toLocaleString('fa-IR')}
                       </p>
                     )}
-                  </motion.div>
-                )}
-              </motion.div>
-            );
-          })}
-        </div>
-      </div>
+                  </div>
+
+                  {isCompleted && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      whileHover={{ opacity: 1, y: 0 }}
+                      className={`absolute top-20 mt-16 ${currentTheme.card} ${currentTheme.border} border rounded-lg shadow-xl p-4 z-10 opacity-0 group-hover:opacity-100 transition-all pointer-events-none`}
+                    >
+                      <p className={`text-sm ${currentTheme.text} font-semibold`}>
+                        تراز: {exam.taz.toLocaleString('fa-IR')}
+                      </p>
+                      {originalIndex > 0 && studentData.exams[originalIndex - 1].taz > 0 && (
+                        <p className={`text-xs ${currentTheme.textSecondary} mt-1`}>
+                          تغییر: {((exam.taz - studentData.exams[originalIndex - 1].taz) / studentData.exams[originalIndex - 1].taz * 100).toFixed(1)}%
+                        </p>
+                      )}
+                    </motion.div>
+                  )}
+                </motion.div>
+              );
+            })}
+          </div>
+        </motion.div>
+      </AnimatePresence>
 
       <div className="mt-8 flex justify-center gap-6 text-sm">
         <div className="flex items-center gap-2">

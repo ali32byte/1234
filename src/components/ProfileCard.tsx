@@ -115,27 +115,6 @@ export function ProfileCard() {
         </motion.div>
       </div>
 
-      <motion.div
-        initial={{ width: 0 }}
-        animate={{ width: '100%' }}
-        transition={{ delay: 0.5, duration: 1 }}
-        className="mt-6"
-      >
-        <div className="flex justify-between items-center mb-2">
-          <span className={`text-sm ${currentTheme.textSecondary}`}>پیشرفت نسبت به میانگین</span>
-          <span className={`text-sm font-bold ${currentTheme.text}`}>
-            {studentData.totalTaz.toLocaleString('fa-IR')} / {studentData.averageTaz.toLocaleString('fa-IR')}
-          </span>
-        </div>
-        <div className={`w-full h-3 ${theme === 'dark' || theme === 'neon' ? 'bg-gray-700' : 'bg-gray-200'} rounded-full overflow-hidden`}>
-          <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: `${Math.min((studentData.totalTaz / (studentData.averageTaz * 1.2)) * 100, 100)}%` }}
-            transition={{ delay: 0.7, duration: 1 }}
-            className="h-full bg-gradient-to-r from-blue-500 to-green-500 rounded-full"
-          />
-        </div>
-      </motion.div>
     </motion.div>
   );
 }

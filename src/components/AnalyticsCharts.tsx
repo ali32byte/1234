@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useTheme, themes } from '../contexts/ThemeContext';
 import { useData } from '../contexts/DataContext';
 import { TrendingUp, Award, AlertTriangle } from 'lucide-react';
@@ -44,9 +44,9 @@ export function AnalyticsCharts() {
             </h2>
           </div>
 
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={examTrendData}>
+          <div className="h-64 flex items-center justify-center">
+            <ResponsiveContainer width="95%" height="100%">
+              <LineChart data={examTrendData}>
                 <CartesianGrid strokeDasharray="3 3" stroke={theme === 'dark' || theme === 'neon' ? '#374151' : '#e5e7eb'} />
                 <XAxis
                   dataKey="name"
@@ -65,9 +65,23 @@ export function AnalyticsCharts() {
                   }}
                 />
                 <Legend />
-                <Bar dataKey="تراز" fill="#3b82f6" radius={[8, 8, 0, 0]} />
-                <Bar dataKey="میانگین" fill="#10b981" radius={[8, 8, 0, 0]} />
-              </BarChart>
+                <Line
+                  type="monotone"
+                  dataKey="تراز"
+                  stroke="#3b82f6"
+                  strokeWidth={3}
+                  dot={{ fill: '#3b82f6', r: 5 }}
+                  activeDot={{ r: 7 }}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="میانگین"
+                  stroke="#10b981"
+                  strokeWidth={3}
+                  dot={{ fill: '#10b981', r: 5 }}
+                  activeDot={{ r: 7 }}
+                />
+              </LineChart>
             </ResponsiveContainer>
           </div>
         </div>

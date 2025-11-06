@@ -131,7 +131,7 @@ export function AIAnalysis({ isOpen, onClose }: AIAnalysisProps) {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className={`fixed top-1/3 left-1/5 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl ${currentTheme.card} rounded-2xl shadow-2xl z-[60] max-h-[85vh] overflow-hidden`}
+            className={`fixed top-1/3 right-1/5 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl ${currentTheme.card} rounded-2xl shadow-2xl z-[60] max-h-[85vh] overflow-hidden`}
           >
             <div className={`${currentTheme.card} ${currentTheme.border} border-b p-6 flex items-center justify-between bg-gradient-to-r from-purple-500 to-pink-500`}>
               <div className="flex items-center gap-3">

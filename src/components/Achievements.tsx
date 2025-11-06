@@ -14,23 +14,23 @@ export function Achievements() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.8 }}
-      className={`${currentTheme.card} rounded-2xl shadow-xl p-6 ${currentTheme.border} border`}
+      className={`${currentTheme.card} rounded-2xl shadow-xl p-4 md:p-6 ${currentTheme.border} border`}
     >
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <Award className="text-yellow-500" size={24} />
-          <h2 className={`text-2xl font-bold ${currentTheme.text}`}>
-            دستاوردها و نشان‌ها
+          <Award className="text-yellow-500" size={20} />
+          <h2 className={`text-lg md:text-2xl font-bold ${currentTheme.text}`}>
+            دستاوردها
           </h2>
         </div>
-        <div className={`px-4 py-2 rounded-full ${theme === 'dark' || theme === 'neon' ? 'bg-gray-700' : 'bg-gray-100'}`}>
-          <span className={`text-sm font-semibold ${currentTheme.text}`}>
-            {studentData.badgesUnlocked?.length} / {allBadges.length} باز شده
+        <div className={`px-3 py-1 rounded-full text-xs md:text-sm ${theme === 'dark' || theme === 'neon' ? 'bg-gray-700' : 'bg-gray-100'}`}>
+          <span className={`font-semibold ${currentTheme.text}`}>
+            {studentData.badgesUnlocked?.length} / {allBadges.length}
           </span>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-3 md:grid-cols-5 gap-2 md:gap-3">
         {allBadges.map((badge, idx) => {
           const isUnlocked = studentData.badgesUnlocked?.includes(badge.emoji);
 
@@ -39,47 +39,40 @@ export function Achievements() {
               key={badge.emoji}
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: idx * 0.05 }}
-              whileHover={isUnlocked ? { scale: 1.1, rotate: 5 } : {}}
-              className={`relative p-6 rounded-xl text-center transition-all ${
+              transition={{ delay: idx * 0.03 }}
+              whileHover={isUnlocked ? { scale: 1.1 } : {}}
+              className={`relative p-3 rounded-lg text-center transition-all ${
                 isUnlocked
-                  ? `${theme === 'dark' || theme === 'neon' ? 'bg-gradient-to-br from-yellow-600 to-yellow-800' : 'bg-gradient-to-br from-yellow-100 to-yellow-200'} ${currentTheme.border} border-2 border-yellow-400 shadow-lg cursor-pointer`
-                  : `${theme === 'dark' || theme === 'neon' ? 'bg-gray-800' : 'bg-gray-100'} opacity-50 cursor-not-allowed`
+                  ? `${theme === 'dark' || theme === 'neon' ? 'bg-gradient-to-br from-yellow-600 to-yellow-800' : 'bg-gradient-to-br from-yellow-100 to-yellow-200'} border border-yellow-400 shadow-md cursor-pointer`
+                  : `${theme === 'dark' || theme === 'neon' ? 'bg-gray-800' : 'bg-gray-100'} opacity-40 cursor-not-allowed`
               }`}
               title={badge.description}
             >
               {!isUnlocked && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 rounded-xl">
-                  <Lock className="text-white" size={32} />
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 rounded-lg">
+                  <Lock className="text-white" size={16} />
                 </div>
               )}
 
               <motion.div
                 animate={isUnlocked ? {
-                  scale: [1, 1.2, 1],
+                  scale: [1, 1.15, 1],
                 } : {}}
                 transition={{
                   duration: 2,
                   repeat: Infinity,
                   repeatDelay: 3
                 }}
-                className="text-5xl mb-3"
+                className="text-3xl"
               >
                 {badge.emoji}
               </motion.div>
-
-              <h3 className={`font-bold text-sm mb-1 ${isUnlocked ? currentTheme.text : 'text-gray-400'}`}>
-                {badge.name}
-              </h3>
-              <p className={`text-xs ${isUnlocked ? currentTheme.textSecondary : 'text-gray-500'}`}>
-                {badge.description}
-              </p>
 
               {isUnlocked && (
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  className="absolute -top-2 -right-2 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white font-bold shadow-lg"
+                  className="absolute -top-1 -right-1 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-md"
                 >
                   ✓
                 </motion.div>
@@ -92,10 +85,10 @@ export function Achievements() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1 }}
-        className={`mt-6 p-4 rounded-xl ${theme === 'dark' || theme === 'neon' ? 'bg-blue-900 bg-opacity-30' : 'bg-blue-50'} border border-blue-200`}
+        transition={{ delay: 0.9 }}
+        className={`mt-4 p-3 rounded-lg ${theme === 'dark' || theme === 'neon' ? 'bg-blue-900 bg-opacity-30' : 'bg-blue-50'} border border-blue-200`}
       >
-        <p className={`text-sm ${currentTheme.text} text-center`}>
+        <p className={`text-xs md:text-sm ${currentTheme.text} text-center`}>
           💡 نشان‌های بیشتر با ادامه تلاش و بهبود عملکرد باز خواهند شد!
         </p>
       </motion.div>

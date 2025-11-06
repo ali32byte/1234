@@ -25,6 +25,10 @@ export function AIAnalysis({ isOpen, onClose }: AIAnalysisProps) {
     try {
       const apiKey = 'AIzaSyBE-lJCcVBl2T1gBXJZL-pGvSbv9_eC98s';
 
+      if (!apiKey) {
+        throw new Error('API key is not configured');
+      }
+
       const topSubjects = [...studentData.subjects]
         .sort((a, b) => b.taz - a.taz)
         .slice(0, 3)
@@ -103,7 +107,8 @@ export function AIAnalysis({ isOpen, onClose }: AIAnalysisProps) {
 
       setAnalysis(generatedText);
     } catch (err) {
-      setError('متاسفانه در دریافت تحلیل هوشمند خطایی رخ داد. لطفاً دوباره تلاش کنید.');
+      const errorMessage = err instanceof Error ? err.message : 'خطای نامشخص';
+      setError(`متاسفانه در دریافت تحلیل هوشمند خطایی رخ داد. لطفاً اتصال اینترنت را بررسی کنید و دوباره تلاش کنید. (${errorMessage})`);
       console.error('AI Analysis Error:', err);
     } finally {
       setIsLoading(false);
@@ -131,7 +136,7 @@ export function AIAnalysis({ isOpen, onClose }: AIAnalysisProps) {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className={`fixed top-1/3 right-1/4 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl ${currentTheme.card} rounded-2xl shadow-2xl z-[60] max-h-[85vh] overflow-hidden`}
+            className={`fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl mx-4 ${currentTheme.card} rounded-2xl shadow-2xl z-[60] max-h-[85vh] overflow-hidden`}
           >
             <div className={`${currentTheme.card} ${currentTheme.border} border-b p-6 flex items-center justify-between bg-gradient-to-r from-purple-500 to-pink-500`}>
               <div className="flex items-center gap-3">

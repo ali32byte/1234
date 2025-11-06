@@ -13,6 +13,7 @@ import { SkillTree } from './components/SkillTree';
 import { AnalyticsCharts } from './components/AnalyticsCharts';
 import { LeagueBoard } from './components/LeagueBoard';
 import { Achievements } from './components/Achievements';
+import { SubjectScorePercentage } from './components/SubjectScorePercentage';
 import { ExportMenu } from './components/ExportMenu';
 import { AIAnalysis } from './components/AIAnalysis';
 import { motion } from 'framer-motion';
@@ -92,6 +93,10 @@ function AppContent() {
 
         <div id="comparison-chart-section">
           <SubjectComparisonChart />
+        </div>
+
+        <div id="subject-percentage-section">
+          <SubjectScorePercentage />
         </div>
 
         <div id="achievements-section">

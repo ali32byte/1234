@@ -44,8 +44,8 @@ export function AnalyticsCharts() {
             </h2>
           </div>
 
-          <div className="h-64 flex items-center justify-center">
-            <ResponsiveContainer width="95%" height="100%">
+          <div className="h-72 flex items-center justify-center py-6">
+            <ResponsiveContainer width="98%" height="100%">
               <LineChart data={examTrendData}>
                 <CartesianGrid strokeDasharray="3 3" stroke={theme === 'dark' || theme === 'neon' ? '#374151' : '#e5e7eb'} />
                 <XAxis
